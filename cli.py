@@ -4,12 +4,16 @@ from cmd import Cmd
 
 import wrapper
 from objects import Project
+from cli_helpers import parse, arglen
+import cli_helpers as cli
 
 class TodoistCLI(Cmd):
 
     def __init__(self, secret):
         super().__init__()
 
+    @parse
+    @arglen(0)
     def do_projects(self, args):
         """
         Retrieves a listing of all project names and their ids.
@@ -17,8 +21,10 @@ class TodoistCLI(Cmd):
         Takes no arguments.
         """
         projects = wrapper.todoist.get_projects()
-        TodoistCLI.print_listing(projects, 0)
+        cli.print_listing(projects, 0)
     
+    @parse
+    @arglen(0, 1)
     def do_tasks(self, args):
         """
         Retrieves a listing of all tasks.
@@ -28,24 +34,18 @@ class TodoistCLI(Cmd):
         """
         project_id = None
         if args:
-            project_id = args
+            project_id = args[0]
 
         pos = 0
         if project_id:
             project = Project(project_id)
             print("<{}>".format(project))
-            pos = TodoistCLI.print_listing(project, pos)
+            pos = cli.print_listing(project, pos)
         else:
             projects = wrapper.todoist.get_projects()
             for project in projects:
                 print("<{}>".format(project))
-                pos = TodoistCLI.print_listing(project, pos)
-    
-    def print_listing(items, pos):
-        for offset, item in enumerate(items):
-            print('{}. {}'.format(pos+offset, item))
-
-        return pos + len(items)
+                pos = cli.print_listing(project, pos)
 
     def do_task(self, args):
         """

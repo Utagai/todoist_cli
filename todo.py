@@ -16,6 +16,7 @@ def main():
     todoist_cli = TodoistCLI(secret)
     todoist_cli.prompt = '~> '
     todoist_cli.cmdloop('todoist CLI')
+    todoist_cli.use_rawinput = False
 
 if __name__ == '__main__':
     main()
