@@ -2,14 +2,13 @@ import readline
 import rlcompleter
 from cmd import Cmd
 
-from wrapper import TodoistWrapper
-
-#class ArgCount:
-#    def __init__(self, do):
-#
+import wrapper
+from objects import Project
 
 class TodoistCLI(Cmd):
-    todoist = TodoistWrapper('secret')
+
+    def __init__(self, secret):
+        super().__init__()
 
     def do_projects(self, args):
         """
@@ -17,7 +16,8 @@ class TodoistCLI(Cmd):
 
         Takes no arguments.
         """
-        pass
+        projects = wrapper.todoist.get_projects()
+        TodoistCLI.print_listing(projects, 0)
     
     def do_tasks(self, args):
         """
@@ -26,7 +26,26 @@ class TodoistCLI(Cmd):
         Takes an optional project name or id, only listing the tasks of the
         given project.
         """
-        pass
+        project_id = None
+        if args:
+            project_id = args
+
+        pos = 0
+        if project_id:
+            project = Project(project_id)
+            print("<{}>".format(project))
+            pos = TodoistCLI.print_listing(project, pos)
+        else:
+            projects = wrapper.todoist.get_projects()
+            for project in projects:
+                print("<{}>".format(project))
+                pos = TodoistCLI.print_listing(project, pos)
+    
+    def print_listing(items, pos):
+        for offset, item in enumerate(items):
+            print('{}. {}'.format(pos+offset, item))
+
+        return pos + len(items)
 
     def do_task(self, args):
         """
