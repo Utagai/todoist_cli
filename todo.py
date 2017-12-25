@@ -13,7 +13,7 @@ def main():
         print("Calling init")
         wrapper_init(secret)
 
-    todoist_cli = TodoistCLI(secret)
+    todoist_cli = TodoistCLI()
     todoist_cli.prompt = '~> '
     todoist_cli.cmdloop('todoist CLI')
     todoist_cli.use_rawinput = False

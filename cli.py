@@ -9,9 +9,6 @@ import cli_helpers as cli
 
 class TodoistCLI(Cmd):
 
-    def __init__(self, secret):
-        super().__init__()
-
     @parse
     @arglen(0)
     def do_projects(self, args):
