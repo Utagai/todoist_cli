@@ -10,7 +10,6 @@ def main():
         conf = json.load(conf_file)
 
         secret = conf['secret']
-        print("Calling init")
         wrapper_init(secret)
 
     todoist_cli = TodoistCLI()
