@@ -91,6 +91,12 @@ class TodoistCLI(Cmd):
     @arglen(1)
     @inject
     def do_select(self, args):
+        """
+        Sets the project with the given id as the currently selected project.
+
+        All commands that implicitly act on a project with use this selected
+        project. An example is task create.
+        """
         try:
             self.state.set_project(int(args[0]))
             self.prompt = '~({})> '.format(self.state.active_project.name)

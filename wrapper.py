@@ -22,7 +22,6 @@ class TodoistWrapper:
         return self.todoist.items.get(task_id)
 
     def create_task(self, name, project_id):
-        print("Adding item with name: {} and project id: {}".format(name, project_id))
         self.todoist.items.add(name, project_id)
         self.todoist.commit()
 

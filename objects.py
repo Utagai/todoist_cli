@@ -10,12 +10,6 @@ class _TodoistObject:
     
     def _populate(self):
         raise NotImplementedError
-    
-    def save(self):
-        raise NotImplementedError
-
-    def delete(self):
-        raise NotImplementedError
 
     def __str__(self):
         return "{} ({})".format(self.name, self.obj_id)

@@ -24,8 +24,7 @@ class CLIState:
     def fetch(self, identifier, hint=None):
         if hint == '%p' or not hint:
             try:
-                identifier = int(identifier)
-                return self.listing[identifier]
+                return self.listing[int(identifier)]
             except ValueError:
                 pass
         if hint == '%s' or not hint:
