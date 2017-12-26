@@ -70,7 +70,7 @@ class TodoistCLI(Cmd):
         Takes the arguments (operations):
             1: create   <name> - Creates a task with the given name in the
                                  currently selected project.
-            4: complete <id>   - Sets the task with the given id as completed.
+            2: complete <id>   - Sets the task with the given id as completed.
         """
         sub_cmd = args[0]
         if sub_cmd == 'create':
@@ -104,22 +104,29 @@ class TodoistCLI(Cmd):
             raise CmdError("Argument must be a project id.")
         pass
 
+    @command
+    @arglen(2)
+    @inject
+    @restrict(['create', 'complete', 'clear'])
+    @emptystate
     def do_project(self, args):
         """
         Performs project operations.
 
         Takes the arguments (operations):
-            1: create <name> - Creates a project with the given name.
-            2: show   <id>   - Shows some selected information about the project
-                               with the given id.
-            3: delete <id>   - Deletes the project with the given id and its
-                               constituent tasks.
-            4: done   <id>   - Sets all constituent tasks in the project with
-                               given id as completed.
-            5: clear  <id>   - Clears all tasks in the project with the given 
-                               id.
+            1: create   <name> - Creates a project with the given name.
+            2: complete <id>   - Sets all constituent tasks in the project with
+                                 given id as completed.
+            3: clear    <id>   - Delete all tasks in the project with the
+                                 given id.
         """
-        pass
+        sub_cmd = args[0]
+        if sub_cmd == 'create':
+            print("Creating project with name: {}".format(args[1]))
+        elif sub_cmd == 'complete':
+            print("Completing project with id: {}".format(args[1]))
+        elif sub_cmd == 'clear':
+            print("Clearing project with id: {}".format(args[1]))
 
     def do_exit(self, args):
         """

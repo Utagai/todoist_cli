@@ -1,10 +1,15 @@
 import re
 import readline
+from functools import wraps
 
 from cmd_error import CmdError
 
 def command(func):
+    @wraps(func)
     def cmd_trycatch(self, arg):
+        """
+        Testing: {}
+        """
         args = arg.split()
         try:
             func(self, args)
@@ -13,12 +18,14 @@ def command(func):
     return cmd_trycatch
 
 def state(func):
+    @wraps(func)
     def set_state(self, args):
         self.state.set_state(func(self, args))
 
     return set_state
 
 def emptystate(func):
+    @wraps(func)
     def set_state(self, args):
         self.state.clear_state()
         func(self, args)
@@ -34,6 +41,7 @@ class arglen:
             self.max = max
 
     def __call__(self, func):
+        @wraps(func)
         def arglen_check(func_self, args):
             if self.min <= len(args) and len(args) <= self.max:
                 return func(func_self, args)
@@ -46,6 +54,7 @@ class arglen:
 def inject(func):
     inject_base_pat = '%{}:({}\\b)*'
     hint_base = '%{}'
+    @wraps(func)
     def inject_arg(self, args):
         for i in range(len(args)):
             arg = args[i]
@@ -78,6 +87,7 @@ class restrict:
         self.subcmds = subcmds
 
     def __call__(self, func):
+        @wraps(func)
         def restrict_subcmds(func_self, args):
             if args[0] in self.subcmds:
                 func(func_self, args)
