@@ -74,16 +74,12 @@ class TodoistCLI(Cmd):
         """
         sub_cmd = args[0]
         if sub_cmd == 'create':
-            if not self.state.active_project:
-                raise CmdError("No active project. Use the select command.")
+            if self.state.active_project is None:
+                raise CmdError("No active project. Use the select command")
             proj_id = self.state.active_project.obj_id
             wrapper.todoist.create_task(args[1], proj_id)
         elif sub_cmd == 'complete':
-            try:
-                task = Task(int(args[1]))
-                task.complete()
-            except ValueError:
-                raise CmdError("Task id must be an integer.")
+            wrapper.todoist.complete_task(args[1])
 
     @command
     @arglen(1)
@@ -123,8 +119,10 @@ class TodoistCLI(Cmd):
             wrapper.todoist.create_project(args[1])
         elif sub_cmd == 'complete':
             print("Completing project with id: {}".format(args[1]))
+            wrapper.todoist.complete_project(args[1])
         elif sub_cmd == 'clear':
             print("Clearing project with id: {}".format(args[1]))
+            wrapper.todoist.clear_project(args[1])
 
     def do_exit(self, args):
         """

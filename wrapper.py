@@ -29,6 +29,25 @@ class TodoistWrapper:
         self.todoist.projects.add(project_name)
         self.todoist.commit()
 
-    def complete(self, task_id):
-        self.todoist.items.complete([task_id])
+    def complete_task(self, task_id):
+        try:
+            self.todoist.items.complete([int(task_id)])
+            self.todoist.commit()
+        except ValueError:
+            raise CmdError("Argument must be a task id.")
+
+    def _get_project_task_ids(self, project_id):
+        try:
+            project = Project(int(project_id))
+            task_ids = [task.obj_id for task in project]
+            return task_ids
+        except ValueError:
+            raise CmdError("Argument must be a project id.")
+
+    def complete_project(self, project_id):
+        self.todoist.items.complete(self._get_project_task_ids(project_id))
+        self.todoist.commit()
+
+    def clear_project(self, project_id):
+        self.todoist.items.delete(self._get_project_task_ids(project_id))
         self.todoist.commit()

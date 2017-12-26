@@ -21,9 +21,6 @@ class Task(_TodoistObject):
         self.date = self._raw['item']['date_added']
         self.project_id = self._raw['project']['id']
 
-    def complete(self):
-        wrapper.todoist.complete(self.obj_id)
-
     def _from_raw(raw):
         task = Task()
         task._raw = raw
