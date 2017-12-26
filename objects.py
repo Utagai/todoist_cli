@@ -1,4 +1,5 @@
 import wrapper
+from cmd_error import CmdError
 
 class _TodoistObject:
     def __init__(self, obj_id = None, name = None):
@@ -48,6 +49,8 @@ class Task(_TodoistObject):
 class Project(_TodoistObject):
     def _populate(self):
         self._raw = wrapper.todoist.project_data(self.obj_id)
+        if 'error' in self._raw:
+            raise CmdError(str(self._raw['error']))
         project = self._raw['project']
         self.name = self._raw['project']['name']
         self._tasks = None

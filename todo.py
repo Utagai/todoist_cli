@@ -14,8 +14,10 @@ def main():
 
     todoist_cli = TodoistCLI()
     todoist_cli.prompt = '~> '
+    def nothing():
+        pass
+    todoist_cli.emptyline = nothing
     todoist_cli.cmdloop('todoist CLI')
-    todoist_cli.use_rawinput = False
 
 if __name__ == '__main__':
     main()

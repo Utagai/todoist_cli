@@ -1,11 +1,16 @@
 import re
 import readline
 
-def parse(func):
-    def split_arg(self, arg):
-        func(self, arg.split())
+from cmd_error import CmdError
 
-    return split_arg
+def command(func):
+    def cmd_trycatch(self, arg):
+        args = arg.split()
+        try:
+            func(self, args)
+        except CmdError as e:
+            print("Error: {} for args: '{}'".format(str(e), ' '.join(args)))
+    return cmd_trycatch
 
 def state(func):
     def set_state(self, args):
@@ -22,9 +27,9 @@ class arglen:
             self.max = max
 
     def __call__(self, func):
-        def arglen_check(func_self, arg):
-            if self.min <= len(arg) and len(arg) <= self.max:
-                return func(func_self, arg)
+        def arglen_check(func_self, args):
+            if self.min <= len(args) and len(args) <= self.max:
+                return func(func_self, args)
             else:
                 print("The '{}' command takes between [{}, {}] args.".format(
                     func.__name__.split('_')[1], self.min, self.max))
@@ -57,6 +62,19 @@ def inject(func):
         readline_inject(args)
 
     return inject_arg
+
+class restrict:
+    def __init__(self, subcmds):
+        self.subcmds = subcmds
+
+    def __call__(self, func):
+        def restrict_subcmds(func_self, args):
+            if args[0] in self.subcmds:
+                print("Good subcommand.")
+                func(func_self, args)
+            else:
+                print("Bad subcommand.")
+                print("Sub commands must be one of: {}.".format(self.subcmds))
 
 def readline_inject(args):
     # Inject into readline to use the injected command.

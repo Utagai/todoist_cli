@@ -4,7 +4,7 @@ from cmd import Cmd
 
 import wrapper
 from objects import Project
-from cli_helpers import parse, arglen, inject, state
+from cli_helpers import arglen, inject, state, restrict, command
 import cli_helpers as cli
 from state import CLIState
 
@@ -14,7 +14,7 @@ class TodoistCLI(Cmd):
         super().__init__()
         self.state = CLIState()
 
-    @parse
+    @command
     @arglen(0)
     @state
     def do_projects(self, args):
@@ -27,7 +27,7 @@ class TodoistCLI(Cmd):
         cli.print_listing(projects, 0)
         return projects
     
-    @parse
+    @command
     @arglen(0, 1)
     @inject
     @state
@@ -57,6 +57,10 @@ class TodoistCLI(Cmd):
                 tasks.extend(project.tasks)
             return tasks
 
+    @command
+    @arglen(2)
+    @inject
+    @restrict(['create', 'show', 'delete', 'done'])
     def do_task(self, args):
         """
         Performs task operations.
