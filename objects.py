@@ -5,7 +5,8 @@ class _TodoistObject:
     def __init__(self, obj_id = None):
         self.obj_id = obj_id
         self._raw = None
-        self._populate()
+        if obj_id:
+            self._populate()
     
     def _populate(self):
         raise NotImplementedError
@@ -30,7 +31,9 @@ class Task(_TodoistObject):
         wrapper.todoist.complete(self.obj_id)
 
     def _from_raw(raw):
-        task = Task(raw['id'])
+        task = Task()
+        task._raw = raw
+        task.obj_id = raw['id']
         task.name = raw['content']
         task.date = raw['date_added']
         task.project_id = raw['project_id']
