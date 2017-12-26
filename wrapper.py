@@ -25,6 +25,10 @@ class TodoistWrapper:
         self.todoist.items.add(name, project_id)
         self.todoist.commit()
 
+    def create_project(self, project_name):
+        self.todoist.projects.add(project_name)
+        self.todoist.commit()
+
     def complete(self, task_id):
         self.todoist.items.complete([task_id])
         self.todoist.commit()
