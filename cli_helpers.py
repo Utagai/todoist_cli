@@ -14,13 +14,13 @@ def command(func):
 
 def state(func):
     def set_state(self, args):
-        self.cli_state.set_state(func(self, args))
+        self.state.set_state(func(self, args))
 
     return set_state
 
 def emptystate(func):
     def set_state(self, args):
-        self.cli_state.clear_state()
+        self.state.clear_state()
         func(self, args)
 
     return set_state
@@ -58,11 +58,14 @@ def inject(func):
             elif '%:' in arg:
                 pat = inject_base_pat.format('', '\w+')
                 hint = hint_base.format('')
+            elif '%c:' in arg:
+                pat = inject_base_pat.format('c', '')
+                hint = hint_base.format('c')
             else:
                 continue
 
             val = re.compile(pat).search(arg).group(1)
-            inject_id = str(self.cli_state.fetch(val, hint=hint).obj_id)
+            inject_id = str(self.state.fetch(val, hint=hint).obj_id)
             args[i] = re.sub(pat, inject_id, arg)
 
         func(self, args)

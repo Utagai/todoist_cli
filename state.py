@@ -22,16 +22,20 @@ class CLIState:
             self.listing_map[item.name] = item
 
     def fetch(self, identifier, hint=None):
-        if hint != '%s':
+        if hint == '%p' or not hint:
             try:
                 identifier = int(identifier)
                 return self.listing[identifier]
             except ValueError:
                 pass
-        elif hint != '%p':
+        if hint == '%s' or not hint:
             try:
                 return self.listing_map[identifier]
             except KeyError:
                 pass
-        else:
-            return None
+        if hint == '%c' or not hint:
+            try:
+                return self.active_project
+            except AttributeError:
+                pass
+        return None

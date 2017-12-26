@@ -13,7 +13,7 @@ class TodoistCLI(Cmd):
 
     def __init__(self):
         super().__init__()
-        self.cli_state = CLIState()
+        self.state = CLIState()
 
     @command
     @arglen(0)
@@ -74,14 +74,12 @@ class TodoistCLI(Cmd):
         """
         sub_cmd = args[0]
         if sub_cmd == 'create':
-            print("Creating with name {}".format(args[1]))
-            if not self.cli_state.active_project:
+            if not self.state.active_project:
                 raise CmdError("No active project. Use the select command.")
-            proj_id = self.cli_state.active_project.obj_id
+            proj_id = self.state.active_project.obj_id
             wrapper.todoist.create_task(args[1], proj_id)
             pass
         elif sub_cmd == 'complete':
-            print("Completing id {}".format(args[1]))
             try:
                 task = Task(int(args[1]))
                 task.complete()
@@ -94,8 +92,8 @@ class TodoistCLI(Cmd):
     @inject
     def do_select(self, args):
         try:
-            self.cli_state.set_project(int(args[0]))
-            self.prompt = '~({})> '.format(self.cli_state.active_project.name)
+            self.state.set_project(int(args[0]))
+            self.prompt = '~({})> '.format(self.state.active_project.name)
         except (ValueError, CmdError):
             raise CmdError("Argument must be a project id.")
         pass
