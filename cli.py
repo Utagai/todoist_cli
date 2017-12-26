@@ -3,7 +3,7 @@ import rlcompleter
 from cmd import Cmd
 
 import wrapper
-from objects import Project
+from objects import Task, Project
 from cli_helpers import arglen, inject, state, restrict, command
 import cli_helpers as cli
 from state import CLIState
@@ -60,18 +60,33 @@ class TodoistCLI(Cmd):
     @command
     @arglen(2)
     @inject
-    @restrict(['create', 'show', 'delete', 'done'])
+    @restrict(['create', 'complete'])
     def do_task(self, args):
         """
         Performs task operations.
 
         Takes the arguments (operations):
-            1: create <name> - Creates a task with the given name.
-            2: show   <id>   - Shows some selected information about the task
-                               with given id.
-            3: delete <id>   - Deletes the task with the given id.
-            4: done   <id>   - Sets the task with the given id as completed.
+            1: create   <name> - Creates a task with the given name.
+            4: complete <id>   - Sets the task with the given id as completed.
         """
+        sub_cmd = args[0]
+        if sub_cmd == 'create':
+            print("Creating with name {}".format(args[1]))
+            pass
+        elif sub_cmd == 'complete':
+            print("Completing id {}".format(args[1]))
+            try:
+                task = Task(int(args[1]))
+                task.complete()
+            except ValueError:
+                raise CmdError("Task id must be an integer.")
+            pass
+
+    @command
+    @arglen(1)
+    @inject
+    def do_select(self, args):
+        print("Select project with args: {}".format(args))
         pass
 
     def do_project(self, args):

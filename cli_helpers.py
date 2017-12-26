@@ -70,11 +70,12 @@ class restrict:
     def __call__(self, func):
         def restrict_subcmds(func_self, args):
             if args[0] in self.subcmds:
-                print("Good subcommand.")
                 func(func_self, args)
             else:
-                print("Bad subcommand.")
-                print("Sub commands must be one of: {}.".format(self.subcmds))
+                err_msg = "Sub command must be one of: {}".format(self.subcmds)
+                raise CmdError(err_msg)
+
+        return restrict_subcmds
 
 def readline_inject(args):
     # Inject into readline to use the injected command.
@@ -86,5 +87,4 @@ def readline_inject(args):
 def print_listing(items, pos):
     for offset, item in enumerate(items):
         print('{}. {}'.format(pos+offset, item))
-
     return pos + len(items)

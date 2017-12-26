@@ -20,3 +20,11 @@ class TodoistWrapper:
 
     def task_data(self, task_id):
         return self.todoist.items.get(task_id)
+
+    def create_task(self, name, project_id):
+        self.todoist.items.add(name, project_id)
+        self.todoist.commit()
+
+    def complete(self, task_id):
+        self.todoist.items.complete([task_id])
+        self.todoist.commit()

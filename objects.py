@@ -2,13 +2,10 @@ import wrapper
 from cmd_error import CmdError
 
 class _TodoistObject:
-    def __init__(self, obj_id = None, name = None):
-        if obj_id:
-            self.obj_id = obj_id
-            self._raw = None
-            self._populate()
-        else:
-            self.name = name
+    def __init__(self, obj_id = None):
+        self.obj_id = obj_id
+        self._raw = None
+        self._populate()
     
     def _populate(self):
         raise NotImplementedError
@@ -30,11 +27,11 @@ class Task(_TodoistObject):
         self.project_id = self._raw['project']['id']
 
     def complete(self):
-        pass
+        wrapper.todoist.complete(self.obj_id)
 
     def _from_raw(raw):
-        task = Task(name = raw['content'])
-        task.obj_id = raw['id']
+        task = Task(raw['id'])
+        task.name = raw['content']
         task.date = raw['date_added']
         task.project_id = raw['project_id']
         return task

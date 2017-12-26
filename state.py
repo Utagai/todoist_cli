@@ -2,10 +2,14 @@ class CLIState:
     def __init__(self):
         self.listing = []
         self.listing_map = {}
+        self.active_project = None
 
     def set_state(self, listing):
         self.listing = listing
         self._gen_listing_map(listing)
+
+    def set_project(self, project_id):
+        self.active_project = Project(project_id)
 
     def _gen_listing_map(self, listing):
         for item in listing:
