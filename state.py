@@ -1,3 +1,5 @@
+from objects import Project
+
 class CLIState:
     def __init__(self):
         self.listing = []

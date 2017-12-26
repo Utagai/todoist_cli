@@ -18,6 +18,13 @@ def state(func):
 
     return set_state
 
+def emptystate(func):
+    def set_state(self, args):
+        self.state.set_state(None)
+        func(self, args)
+
+    return set_state
+
 class arglen:
     def __init__(self, min, max = None):
         self.min = min

@@ -4,8 +4,9 @@ from cmd import Cmd
 
 import wrapper
 from objects import Task, Project
-from cli_helpers import arglen, inject, state, restrict, command
+from cli_helpers import arglen, inject, state, emptystate, restrict, command
 import cli_helpers as cli
+from cmd_error import CmdError
 from state import CLIState
 
 class TodoistCLI(Cmd):
@@ -61,6 +62,7 @@ class TodoistCLI(Cmd):
     @arglen(2)
     @inject
     @restrict(['create', 'complete'])
+    @emptystate
     def do_task(self, args):
         """
         Performs task operations.
@@ -86,7 +88,11 @@ class TodoistCLI(Cmd):
     @arglen(1)
     @inject
     def do_select(self, args):
-        print("Select project with args: {}".format(args))
+        try:
+            self.state.set_project(int(args[0]))
+            self.prompt = '~({})> '.format(self.state.active_project.name)
+        except (ValueError, CmdError):
+            raise CmdError("Argument must be a project id.")
         pass
 
     def do_project(self, args):
