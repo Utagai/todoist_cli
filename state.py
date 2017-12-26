@@ -10,6 +10,10 @@ class CLIState:
         self.listing = listing
         self._gen_listing_map(listing)
 
+    def clear_state(self):
+        self.listing = []
+        self.listing_map = {}
+
     def set_project(self, project_id):
         self.active_project = Project(project_id)
 
