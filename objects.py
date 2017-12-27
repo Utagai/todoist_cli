@@ -1,5 +1,5 @@
 import wrapper
-from cmd_error import CmdError
+from cli_helpers import CmdError
 
 class _TodoistObject:
     def __init__(self, obj_id = None):

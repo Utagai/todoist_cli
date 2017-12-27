@@ -5,8 +5,8 @@ from cmd import Cmd
 import wrapper
 from objects import Task, Project
 from cli_helpers import arglen, inject, state, emptystate, restrict, command
+from cli_helpers import CmdError
 import cli_helpers as cli
-from cmd_error import CmdError
 from state import CLIState
 
 class TodoistCLI(Cmd):

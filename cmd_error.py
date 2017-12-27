@@ -1,2 +1,0 @@
-class CmdError(Exception):
-    pass

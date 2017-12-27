@@ -10,6 +10,7 @@ def init_cli():
     def nothing():
         pass
     todoist_cli.emptyline = nothing
+    todoist_cli.cmdqueue.append('projects')
     todoist_cli.cmdloop('todoist CLI')
 
 def main():

@@ -3,7 +3,8 @@ import readline
 from functools import wraps
 import shlex
 
-from cmd_error import CmdError
+class CmdError(Exception):
+    pass
 
 def command(func):
     @wraps(func)
