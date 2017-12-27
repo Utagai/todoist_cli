@@ -8,9 +8,6 @@ from cmd_error import CmdError
 def command(func):
     @wraps(func)
     def cmd_trycatch(self, arg):
-        """
-        Testing: {}
-        """
         args = shlex.split(arg)
         try:
             func(self, args)
@@ -53,7 +50,7 @@ class arglen:
         return arglen_check
 
 def inject(func):
-    inject_base_pat = '%{}:({}\\b)*'
+    inject_base_pat = '%{}:["]?({})["]?'
     hint_base = '%{}'
     @wraps(func)
     def inject_arg(self, args):
@@ -63,10 +60,10 @@ def inject(func):
                 pat = inject_base_pat.format('p', '\d+')
                 hint = hint_base.format('p')
             elif '%s:' in arg:
-                pat = inject_base_pat.format('s', '\w+')
+                pat = inject_base_pat.format('s', '.+')
                 hint = hint_base.format('s')
             elif '%:' in arg:
-                pat = inject_base_pat.format('', '\w+')
+                pat = inject_base_pat.format('', '.+')
                 hint = hint_base.format('')
             elif '%c:' in arg:
                 pat = inject_base_pat.format('c', '')
