@@ -81,6 +81,8 @@ class TodoistCLI(Cmd):
         elif sub_cmd == 'complete':
             wrapper.todoist.complete_task(args[1])
 
+        self.do_tasks(str(self.state.active_project.obj_id))
+
     @command
     @arglen(1)
     @inject
