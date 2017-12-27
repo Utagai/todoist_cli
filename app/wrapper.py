@@ -1,10 +1,10 @@
 from todoist import TodoistAPI
 
-from objects import Task, Project
+from app.objects import Task, Project
 
 todoist = None
 
-def wrapper_init(secret):
+def init(secret):
     global todoist
     todoist = TodoistWrapper(secret)
 

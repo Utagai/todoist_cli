@@ -1,8 +1,8 @@
 import json
 import os
 
-from cli import TodoistCLI 
-from wrapper import wrapper_init
+from app.cli import TodoistCLI 
+from app import wrapper
 
 def init_cli():
     todoist_cli = TodoistCLI()
@@ -17,7 +17,7 @@ def main():
     with open(os.path.expanduser('~') + '/.todo.conf') as conf_file:
         conf = json.load(conf_file)
         secret = conf['secret']
-        wrapper_init(secret)
+        wrapper.init(secret)
 
     init_cli()
 

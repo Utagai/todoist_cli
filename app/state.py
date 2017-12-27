@@ -1,4 +1,4 @@
-from objects import Project
+from app.objects import Project
 
 class CLIState:
     def __init__(self):

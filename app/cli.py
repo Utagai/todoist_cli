@@ -2,12 +2,12 @@ import readline
 import rlcompleter
 from cmd import Cmd
 
-import wrapper
-from objects import Task, Project
-from cli_helpers import arglen, inject, state, emptystate, restrict, command
-from cli_helpers import CmdError
-import cli_helpers as cli
-from state import CLIState
+from app import wrapper
+from app.objects import Task, Project
+from app.cli_helpers import arglen, inject, state, emptystate, restrict, command
+from app.cli_helpers import CmdError
+import app.cli_helpers as cli
+from app.state import CLIState
 
 class TodoistCLI(Cmd):
 
