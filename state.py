@@ -19,7 +19,7 @@ class CLIState:
 
     def _gen_listing_map(self, listing):
         for item in listing:
-            self.listing_map[item.name] = item
+            self.listing_map[item.name.lower()] = item
 
     def fetch(self, identifier, hint=None):
         if hint == '%p' or not hint:
@@ -29,7 +29,7 @@ class CLIState:
                 pass
         if hint == '%s' or not hint:
             try:
-                return self.listing_map[identifier]
+                return self.listing_map[identifier.lower()]
             except KeyError:
                 pass
         if hint == '%c' or not hint:

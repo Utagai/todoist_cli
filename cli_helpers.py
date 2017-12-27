@@ -1,6 +1,7 @@
 import re
 import readline
 from functools import wraps
+import shlex
 
 from cmd_error import CmdError
 
@@ -10,7 +11,7 @@ def command(func):
         """
         Testing: {}
         """
-        args = arg.split()
+        args = shlex.split(arg)
         try:
             func(self, args)
         except CmdError as e:
