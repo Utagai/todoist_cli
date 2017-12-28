@@ -1,4 +1,5 @@
 from app.objects import Project
+from app.cli_helpers import CmdError
 
 class CLIState:
     def __init__(self):
@@ -25,7 +26,7 @@ class CLIState:
         if hint == '%p' or not hint:
             try:
                 return self.listing[int(identifier)]
-            except ValueError:
+            except (ValueError, IndexError):
                 pass
         if hint == '%s' or not hint:
             try:
@@ -37,4 +38,4 @@ class CLIState:
                 return self.active_project
             except AttributeError:
                 pass
-        return None
+        raise CmdError("No such parameter {} exists".format(identifier))
