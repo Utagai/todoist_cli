@@ -1,6 +1,8 @@
 from app.cli_helpers import CmdError
 from app import wrapper
 
+from app.color import prnt_str, BROWN, TURQ, GREEN
+
 class _TodoistObject:
     def __init__(self, obj_id = None):
         self.obj_id = obj_id
@@ -12,7 +14,8 @@ class _TodoistObject:
         raise NotImplementedError
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.obj_id)
+        return prnt_str(self.name, " (", self.obj_id, ")", 
+                GREEN, TURQ, BROWN, TURQ)
 
 class Task(_TodoistObject):
     def _populate(self):

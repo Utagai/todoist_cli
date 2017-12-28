@@ -4,6 +4,7 @@ from cmd import Cmd
 
 from app import wrapper
 from app.objects import Task, Project
+from app.color import prnt, VIOLET
 from app.cli_helpers import arglen, inject, state, emptystate, restrict, command
 from app.cli_helpers import CmdError
 import app.cli_helpers as cli
@@ -46,14 +47,14 @@ class TodoistCLI(Cmd):
         pos = 0
         if project_id:
             project = Project(project_id)
-            print("<{}>".format(project))
+            prnt('<', project, '>', VIOLET, None, VIOLET)
             pos = cli.print_listing(project, pos)
             return project.tasks
         else:
             projects = wrapper.todoist.get_projects()
             tasks = []
             for project in projects:
-                print("<{}>".format(project))
+                prnt('<', project, '>', VIOLET, None, VIOLET)
                 pos = cli.print_listing(project, pos)
                 tasks.extend(project.tasks)
             return tasks
@@ -117,18 +118,15 @@ class TodoistCLI(Cmd):
         """
         sub_cmd = args[0]
         if sub_cmd == 'create':
-            print("Creating project with name: {}".format(args[1]))
             wrapper.todoist.create_project(args[1])
         elif sub_cmd == 'complete':
-            print("Completing project with id: {}".format(args[1]))
             wrapper.todoist.complete_project(args[1])
         elif sub_cmd == 'clear':
-            print("Clearing project with id: {}".format(args[1]))
             wrapper.todoist.clear_project(args[1])
 
     def do_exit(self, args):
         """
         Exits the CLI application.
         """
-        print("Bye")
+        prnt("Bye", VIOLET)
         exit(0)

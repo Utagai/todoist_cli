@@ -3,10 +3,11 @@ import os
 
 from app.cli import TodoistCLI 
 from app import wrapper
+from app.color import prnt_str, PURPLE, ORANGE, BLUE
 
 def init_cli():
     todoist_cli = TodoistCLI()
-    todoist_cli.prompt = '~> '
+    todoist_cli.prompt = prnt_str('~', '>', ' ', PURPLE, BLUE, ORANGE)
     def nothing():
         pass
     todoist_cli.emptyline = nothing

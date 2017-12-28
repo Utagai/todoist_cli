@@ -3,6 +3,8 @@ import readline
 from functools import wraps
 import shlex
 
+from app.color import prnt, VIOLET, RED
+
 class CmdError(Exception):
     pass
 
@@ -13,7 +15,7 @@ def command(func):
         try:
             func(self, args)
         except CmdError as e:
-            print("Error: {} for args: '{}'".format(str(e), ' '.join(args)))
+            prnt("Error: {} for args: '{}'".format(str(e), ' '.join(args)), RED)
     return cmd_trycatch
 
 def state(func):
@@ -45,8 +47,8 @@ class arglen:
             if self.min <= len(args) and len(args) <= self.max:
                 return func(func_self, args)
             else:
-                print("The '{}' command takes between [{}, {}] args.".format(
-                    func.__name__.split('_')[1], self.min, self.max))
+                raise CmdError("The '{}' command takes between [{}, {}] args"
+                    .format(func.__name__.split('_')[1], self.min, self.max))
 
         return arglen_check
 
@@ -105,5 +107,5 @@ def readline_inject(args):
 
 def print_listing(items, pos):
     for offset, item in enumerate(items):
-        print('{}. {}'.format(pos+offset, item))
+        prnt(pos+offset, '. ', item, VIOLET, None, None)
     return pos + len(items)
