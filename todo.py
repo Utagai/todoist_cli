@@ -1,5 +1,6 @@
 import json
 import os
+import colored
 
 from app.cli import TodoistCLI 
 from app import wrapper
@@ -12,7 +13,7 @@ def init_cli():
         pass
     todoist_cli.emptyline = nothing
     todoist_cli.cmdqueue.append('projects')
-    todoist_cli.cmdloop('todoist CLI')
+    todoist_cli.cmdloop(prnt_str('todoist', PURPLE))
 
 def main():
     with open(os.path.expanduser('~') + '/.todo.conf') as conf_file:
