@@ -98,7 +98,7 @@ class TodoistCLI(Cmd):
             self.state.set_project(int(args[0]))
             self.prompt = prnt_str('~', 
                     '(', self.state.active_project.name, ')', 
-                    '>', ' ', PURPLE, TURQ, VIOLET, TURQ, BLUE, ORANGE)
+                    '>', ' ', PURPLE, TURQ, PURPLE, TURQ, BLUE, ORANGE)
         except (ValueError, CmdError):
             raise CmdError("Argument must be a project id.")
 
