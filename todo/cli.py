@@ -4,7 +4,7 @@ from cmd import Cmd
 
 import wrapper
 from objects import Task, Project
-from color import prnt, VIOLET
+from color import prnt, prnt_str, VIOLET, PURPLE, ORANGE, TURQ, BLUE
 from cli_helpers import arglen, inject, state, emptystate, restrict, command
 from cli_helpers import CmdError
 import cli_helpers as cli
@@ -96,7 +96,9 @@ class TodoistCLI(Cmd):
         """
         try:
             self.state.set_project(int(args[0]))
-            self.prompt = '~({})> '.format(self.state.active_project.name)
+            self.prompt = prnt_str('~', 
+                    '(', self.state.active_project.name, ')', 
+                    '>', ' ', PURPLE, TURQ, VIOLET, TURQ, BLUE, ORANGE)
         except (ValueError, CmdError):
             raise CmdError("Argument must be a project id.")
 
