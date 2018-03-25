@@ -1,5 +1,3 @@
-import readline
-import rlcompleter
 from cmd import Cmd
 
 import wrapper
@@ -28,7 +26,7 @@ class TodoistCLI(Cmd):
         projects = wrapper.todoist.get_projects()
         cli.print_listing(projects, 0)
         return projects
-    
+
     @command
     @arglen(0, 1)
     @inject
@@ -96,8 +94,8 @@ class TodoistCLI(Cmd):
         """
         try:
             self.state.set_project(int(args[0]))
-            self.prompt = prnt_str('~', 
-                    '(', self.state.active_project.name, ')', 
+            self.prompt = prnt_str('~',
+                    '(', self.state.active_project.name, ')',
                     '>', ' ', PURPLE, TURQ, PURPLE, TURQ, BLUE, ORANGE)
         except (ValueError, CmdError):
             raise CmdError("Argument must be a project id.")
