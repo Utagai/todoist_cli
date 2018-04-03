@@ -45,7 +45,8 @@ def prnt_str(*args):
 
     print_msg = ""
     for msg_color in zip(msgs, colors):
-        print_msg += str(msg_color[1]) + str(msg_color[0])
+        # Wrap with \001 & \002 to tell readline to not overcount ANSI codes.
+        print_msg += ('\001' + str(msg_color[1]) + '\002') + str(msg_color[0])
 
     return print_msg
 
