@@ -33,12 +33,16 @@ class TodoistCLI(Cmd):
     @state
     def do_tasks(self, args):
         """
-        Retrieves a listing of all tasks.
+        Retrieves a listing of all tasks for the currently active project, if
+        available. If there is no currently active project, simply lists all
+        tasks across all projects.
 
         Takes an optional project name or id, only listing the tasks of the
         given project.
         """
         project_id = None
+        if self.state.active_project:
+            project_id = self.state.active_project.obj_id
         if args:
             project_id = args[0]
 
