@@ -74,7 +74,10 @@ def inject(func):
             else:
                 continue
 
-            val = re.compile(pat).search(arg).group(1)
+            res = re.compile(pat).search(arg)
+            if not res:
+                raise CmdError("Invalid substitution argument")
+            val = res.group(1)
             inject_id = str(self.state.fetch(val, hint=hint).obj_id)
             args[i] = re.sub(pat, inject_id, arg)
 
