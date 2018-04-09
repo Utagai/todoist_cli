@@ -10,9 +10,10 @@ from state import CLIState
 
 class TodoistCLI(Cmd):
 
-    def __init__(self):
+    def __init__(self, conf):
         super().__init__()
         self.state = CLIState()
+        self.conf = conf
 
     @command
     @arglen(0)
@@ -43,7 +44,7 @@ class TodoistCLI(Cmd):
         project_id = None
         if self.state.active_project:
             project_id = self.state.active_project.obj_id
-        if args:
+        elif args:
             project_id = args[0]
 
         pos = 0
