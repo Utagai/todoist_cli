@@ -17,7 +17,8 @@ def init_cli(conf):
     todoist_cli.cmdloop(prnt_str('todoist', PURPLE))
 
 def main():
-    with open(os.path.expanduser('~') + '/' + conf_filename) as conf_file:
+    conf_filepath = os.path.join(os.path.expanduser('~'), conf_filename)
+    with open(conf_filepath) as conf_file:
         conf_json = json.load(conf_file)
         conf = validate_conf(conf_json)
         wrapper.init(conf)
