@@ -107,7 +107,7 @@ class TodoistCLI(Cmd):
     @command
     @arglen(2)
     @inject
-    @restrict(['create', 'complete', 'clear'])
+    @restrict(['create', 'complete', 'clear', 'delete'])
     @emptystate
     def do_project(self, args):
         """
@@ -119,6 +119,7 @@ class TodoistCLI(Cmd):
                                  given id as completed.
             3: clear    <id>   - Delete all tasks in the project with the
                                  given id.
+            4: delete   <id>   - Delete the project.
         """
         sub_cmd = args[0]
         if sub_cmd == 'create':
@@ -127,6 +128,8 @@ class TodoistCLI(Cmd):
             wrapper.todoist.complete_project(args[1])
         elif sub_cmd == 'clear':
             wrapper.todoist.clear_project(args[1])
+        elif sub_cmd == 'delete':
+            wrapper.todoist.delete_project(args[1])
 
     def do_exit(self, args):
         """

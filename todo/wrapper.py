@@ -52,3 +52,7 @@ class TodoistWrapper:
     def clear_project(self, project_id):
         self.todoist.items.delete(self._get_project_task_ids(project_id))
         self.todoist.commit()
+
+    def delete_project(self, project_id):
+        self.todoist.projects.delete([project_id])
+        self.todoist.commit()
