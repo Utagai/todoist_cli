@@ -17,9 +17,9 @@ class TodoistWrapper:
     def get_projects(self):
         projs = [Project(proj['id']) for proj in self.todoist['projects']]
         if not self.conf['show_inbox']:
-            projs = [proj for proj in projs if proj.name != 'Inbox']
-
-        return projs
+            return [proj for proj in projs if proj.name != 'Inbox']
+        else:
+            return projs
 
     def project_data(self, project_id):
         return self.todoist.projects.get_data(project_id)
