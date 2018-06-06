@@ -2,12 +2,12 @@ import json
 import os
 import colored
 
-from cli import TodoistCLI 
+from cli import TodoistCLI
 import wrapper
 from color import prnt_str, PURPLE, ORANGE, BLUE
 
-def init_cli():
-    todoist_cli = TodoistCLI()
+def init_cli(conf):
+    todoist_cli = TodoistCLI(conf)
     todoist_cli.prompt = prnt_str('~', '>', ' ', PURPLE, BLUE, ORANGE)
     def nothing():
         pass
@@ -18,10 +18,9 @@ def init_cli():
 def main():
     with open(os.path.expanduser('~') + '/.todo.conf') as conf_file:
         conf = json.load(conf_file)
-        secret = conf['secret']
-        wrapper.init(secret)
+        wrapper.init(conf)
 
-    init_cli()
+    init_cli(conf)
 
 if __name__ == '__main__':
     main()

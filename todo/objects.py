@@ -9,12 +9,15 @@ class _TodoistObject:
         self._raw = None
         if obj_id:
             self._populate()
-    
+
     def _populate(self):
         raise NotImplementedError
 
+    def __bool__(self):
+        return True
+
     def __str__(self):
-        return prnt_str(self.name, " (", self.obj_id, ")", 
+        return prnt_str(self.name, " (", self.obj_id, ")",
                 GREEN, TURQ, BROWN, TURQ)
 
 class Task(_TodoistObject):
@@ -37,7 +40,7 @@ class Task(_TodoistObject):
     def project(self):
         if self.project is None:
             self.project = wrapper.todoist.project_data(self.project_id)
-        
+
         return self.project
 
 class Project(_TodoistObject):
@@ -57,7 +60,7 @@ class Project(_TodoistObject):
         return self._tasks
 
     def __iter__(self):
-        return iter(self.tasks) 
+        return iter(self.tasks)
 
     def __len__(self):
         return len(self.tasks)

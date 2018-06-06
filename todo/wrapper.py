@@ -9,12 +9,17 @@ def init(secret):
     todoist = TodoistWrapper(secret)
 
 class TodoistWrapper:
-    def __init__(self, secret):
-        self.todoist = TodoistAPI(secret)
+    def __init__(self, conf):
+        self.todoist = TodoistAPI(conf['secret'])
+        self.conf = conf
         self.todoist.sync()
 
     def get_projects(self):
-        return [Project(project['id']) for project in self.todoist['projects']]
+        projs = [Project(proj['id']) for proj in self.todoist['projects']]
+        if not self.conf['show_inbox']:
+            projs = [proj for proj in projs if proj.name != 'Inbox']
+
+        return projs
 
     def project_data(self, project_id):
         return self.todoist.projects.get_data(project_id)
