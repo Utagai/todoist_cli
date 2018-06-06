@@ -1,5 +1,11 @@
 # Todoist CLI
 
+![Demo][demo gif]
+**Note** Ignore the quote at the beginning, that's from my own shell! :)
+
+**2nd Note** Unfortunately, asciicast2gif seems to be unable to handle smaller
+row counts, so this particular long GIF will have to do.
+
 # What is it?
 
 A *minimal* command-line tool for using the todoist service.
@@ -34,3 +40,5 @@ this. The 'interface' exploration here is both user-facing and developer-facing.
 In other words, I think it is a cool project. Fortunately (or unfortunately),
 although this is the other 'half', it is probably the primary reason for making
 this project :).
+
+[demo gif]: https://imgur.com/xm9UrjD.gif
