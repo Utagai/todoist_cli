@@ -4,9 +4,9 @@ from objects import Task, Project
 
 todoist = None
 
-def init(secret):
+def init(conf):
     global todoist
-    todoist = TodoistWrapper(secret)
+    todoist = TodoistWrapper(conf)
 
 class TodoistWrapper:
     def __init__(self, conf):
