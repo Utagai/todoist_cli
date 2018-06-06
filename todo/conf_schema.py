@@ -1,4 +1,4 @@
-conf_filename = '.todo.conf'
+conf_filename = '.todo.json'
 
 required_fields = [
     "secret"
