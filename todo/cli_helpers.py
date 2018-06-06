@@ -82,7 +82,7 @@ def inject(func):
             args[i] = re.sub(pat, inject_id, arg)
 
         func(self, args)
-        readline_inject(args)
+        #readline_inject(args)
 
     return inject_arg
 
