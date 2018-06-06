@@ -1,3 +1,5 @@
+conf_filename = '.todo.conf'
+
 required_fields = [
     "secret"
 ]
