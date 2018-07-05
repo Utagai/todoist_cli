@@ -38,4 +38,4 @@ class CLIState:
                 return self.active_project
             except AttributeError:
                 pass
-        raise CmdError("No such parameter {} exists".format(identifier))
+        raise CmdError("The argument '{}' does not exist".format(identifier))
