@@ -22,6 +22,13 @@ class CLIState:
         for item in listing:
             self.listing_map[item.name.lower()] = item
 
+    def exists(self, identifier, hint=None):
+        try:
+            ret = self.fetch(identifier, hint)
+            return True
+        except CmdError:
+            return False
+
     def fetch(self, identifier, hint=None):
         if hint == '%p' or not hint:
             try:
@@ -33,9 +40,7 @@ class CLIState:
                 return self.listing_map[identifier.lower()]
             except KeyError:
                 pass
-        if hint == '%c' or not hint:
-            try:
-                return self.active_project
-            except AttributeError:
-                pass
+        if hint == '%c' or not hint and self.active_project:
+            return self.active_project
+
         raise CmdError("The argument '{}' does not exist".format(identifier))
