@@ -10,6 +10,9 @@ def init_cli(conf):
     todoist_cli.prompt = prnt_str('~', '>', ' ', PURPLE, BLUE, ORANGE)
     todoist_cli.emptyline = lambda *args: None
     todoist_cli.cmdqueue.append('projects')
+    if conf["default_project"]:
+        project_selection_cmd = 'select %s:"{}"'.format(conf["default_project"])
+        todoist_cli.cmdqueue.append(project_selection_cmd)
     todoist_cli.cmdloop(prnt_str('todoist', PURPLE))
 
 def main():
