@@ -15,7 +15,8 @@ def command(func):
         try:
             func(self, args)
         except CmdError as e:
-            prnt("Error: {} for args: '{}'".format(str(e), ' '.join(args)), RED)
+            prnt("Err: {} for args: '{}'.".format(str(e), ' '.join(args)), RED)
+            prnt("\t(In command: {}).".format(pure_cmd_name(func)), RED)
     return cmd_trycatch
 
 def state(func):
@@ -112,3 +113,6 @@ def print_listing(items, pos):
     for offset, item in enumerate(items):
         prnt(pos+offset, '. ', item, VIOLET, None, None)
     return pos + len(items)
+
+def pure_cmd_name(cmd_func):
+    return cmd_func.__name__[len('do_'):]
