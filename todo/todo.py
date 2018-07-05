@@ -12,7 +12,8 @@ def init_cli(conf):
     todoist_cli.cmdqueue.append('projects')
     if conf["default_project"]:
         project_selection_cmd = 'select %s:"{}"'.format(conf["default_project"])
-        todoist_cli.cmdqueue.append(project_selection_cmd)
+        config_comment = " # Auto-injected from config file (default_project)."
+        todoist_cli.cmdqueue.append(project_selection_cmd + config_comment)
     todoist_cli.cmdloop(prnt_str('todoist', PURPLE))
 
 def main():

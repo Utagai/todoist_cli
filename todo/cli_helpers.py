@@ -11,12 +11,14 @@ class CmdError(Exception):
 def command(func):
     @wraps(func)
     def cmd_trycatch(self, arg):
-        args = shlex.split(arg)
+        args = shlex.split(arg, comments = True)
         try:
             func(self, args)
         except CmdError as e:
-            prnt("Err: {} for args: '{}'.".format(str(e), ' '.join(args)), RED)
-            prnt("\t(In command: {}).".format(pure_cmd_name(func)), RED)
+            prnt("Error: {}.".format(str(e)), RED)
+            prnt("Command details:", RED)
+            prnt("\tCommand:\n\t\t->\"{}\"".format(pure_cmd_name(func)), RED)
+            prnt("\tArgument string:\n\t\t->\"{}\"".format(arg), RED)
     return cmd_trycatch
 
 def state(func):

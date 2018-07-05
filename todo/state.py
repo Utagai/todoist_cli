@@ -43,4 +43,4 @@ class CLIState:
         if hint == '%c' or not hint and self.active_project:
             return self.active_project
 
-        raise CmdError("The argument '{}' does not exist".format(identifier))
+        raise CmdError("The parameter '{}' does not exist".format(identifier))
