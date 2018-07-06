@@ -9,6 +9,7 @@ PURPLE = colored.fg('light_slate_grey')
 BLUE = colored.fg('light_sky_blue_3a')
 RED = colored.fg('deep_pink_2')
 
+
 def _validate_prnt_args(*args):
     if len(args) % 2 != 0:
         err_msg = "There must be an even number of arguments to prnt()."
@@ -31,6 +32,7 @@ def _validate_prnt_args(*args):
 
     return msgs, colors
 
+
 def _nullify_nones(colors):
     for i in range(len(colors)):
         color = colors[i]
@@ -38,6 +40,7 @@ def _nullify_nones(colors):
             colors[i] = ""
 
     return colors
+
 
 def prnt_str(*args):
     msgs, colors = _validate_prnt_args(*args)
@@ -49,6 +52,7 @@ def prnt_str(*args):
         print_msg += ('\001' + str(msg_color[1]) + '\002') + str(msg_color[0])
 
     return print_msg
+
 
 def prnt(*args):
     print(prnt_str(*args))
