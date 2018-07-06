@@ -1,12 +1,14 @@
 from todoist import TodoistAPI
-
-from objects import Task, Project
+from objects import Project
+from cli_helpers import CmdError
 
 todoist = None
+
 
 def init(conf):
     global todoist
     todoist = TodoistWrapper(conf)
+
 
 class TodoistWrapper:
     def __init__(self, conf):
