@@ -1,6 +1,7 @@
 import os
 import json
 
+
 class Config:
     def __init__(self, conf_json, required, optional):
         self.required_fields = required
@@ -24,6 +25,7 @@ class Config:
     def __setitem__(self, key, value):
         self.conf_json[key] = value
 
+
 class TodoConfig(Config):
     def __init__(self, conf_json, required, optional):
         super().__init__(conf_json, required, optional)
@@ -38,8 +40,8 @@ class TodoConfig(Config):
 
         # Optional fields paired with their default value.
         optional_fields = {
-            "show_inbox" : True,
-            "default_project" : None
+            "show_inbox": True,
+            "default_project": None
         }
 
         conf_filepath = os.path.join(os.path.expanduser('~'), conf_filename)
