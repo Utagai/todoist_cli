@@ -1,6 +1,7 @@
 from objects import Project
 from cli_helpers import CmdError
 
+
 class CLIState:
     def __init__(self):
         self.listing = []
@@ -24,7 +25,6 @@ class CLIState:
 
     def exists(self, identifier, hint=None):
         try:
-            ret = self.fetch(identifier, hint)
             return True
         except CmdError:
             return False
