@@ -5,13 +5,15 @@ import shlex
 
 from color import prnt, VIOLET, RED
 
+
 class CmdError(Exception):
     pass
+
 
 def command(func):
     @wraps(func)
     def cmd_trycatch(self, arg):
-        args = shlex.split(arg, comments = True)
+        args = shlex.split(arg, comments=True)
         try:
             func(self, args)
         except CmdError as e:
@@ -21,12 +23,14 @@ def command(func):
             prnt("\tArgument string:\n\t\t->\"{}\"".format(arg), RED)
     return cmd_trycatch
 
+
 def state(func):
     @wraps(func)
     def set_state(self, args):
         self.state.set_state(func(self, args))
 
     return set_state
+
 
 def emptystate(func):
     @wraps(func)
@@ -36,8 +40,9 @@ def emptystate(func):
 
     return set_state
 
+
 class arglen:
-    def __init__(self, min, max = None):
+    def __init__(self, min, max=None):
         self.min = min
         if not max:
             self.max = self.min
@@ -50,14 +55,20 @@ class arglen:
             if self.min <= len(args) and len(args) <= self.max:
                 return func(func_self, args)
             else:
-                raise CmdError("The '{}' command takes between [{}, {}] args"
-                    .format(func.__name__.split('_')[1], self.min, self.max))
+                raise CmdError(
+                        "The '{}' command takes between [{}, {}] args"
+                        .format(
+                            func.__name__.split('_')[1], self.min, self.max
+                            )
+                        )
 
         return arglen_check
+
 
 def inject(func):
     inject_base_pat = '%{}:["]?({})["]?'
     hint_base = '%{}'
+
     @wraps(func)
     def inject_arg(self, args):
         for i in range(len(args)):
@@ -85,9 +96,10 @@ def inject(func):
             args[i] = re.sub(pat, inject_id, arg)
 
         func(self, args)
-        #readline_inject(args)
+        # readline_inject(args)
 
     return inject_arg
+
 
 class restrict:
     def __init__(self, subcmds):
@@ -104,6 +116,7 @@ class restrict:
 
         return restrict_subcmds
 
+
 def readline_inject(args):
     # Inject into readline to use the injected command.
     history_len = readline.get_current_history_length()
@@ -111,10 +124,12 @@ def readline_inject(args):
     cmd = ' '.join([last_item.split()[0]] + args)
     readline.replace_history_item(history_len-1, cmd)
 
+
 def print_listing(items, pos):
     for offset, item in enumerate(items):
         prnt(pos+offset, '. ', item, VIOLET, None, None)
     return pos + len(items)
+
 
 def pure_cmd_name(cmd_func):
     return cmd_func.__name__[len('do_'):]
