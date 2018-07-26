@@ -46,6 +46,14 @@ class TodoConfig(Config):
             "default_project": None
         }
 
+        return TodoConfig.get_conf_json_or_die(
+                conf_filename,
+                required_fields,
+                optional_fields
+        )
+
+    @staticmethod
+    def get_conf_json_or_die(conf_filename, required_fields, optional_fields):
         conf_filepath = os.path.join(os.path.expanduser('~'), conf_filename)
         with open(conf_filepath) as conf_file:
             try:
