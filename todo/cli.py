@@ -146,3 +146,36 @@ class TodoistCLI(Cmd):
         """
         prnt("Bye", VIOLET)
         exit(0)
+
+    def precmd(self, line):
+        cmds = self._decompose(line)
+        print("Decomposed into: {}".format(cmds))
+        if len(cmds) > 1:
+            self.cmdqueue.extend(cmds[1:])
+        return cmds[0]
+
+    def _decompose(self, line):
+        breakpoints = self._find_breakpoints(line)
+        inclusive_breakpoints = [0] + breakpoints + [len(line)]
+        cmds = []
+        for i in range(len(breakpoints) + 1):
+            start = inclusive_breakpoints[i]
+            end = inclusive_breakpoints[i+1]
+            cmd = line[start:end]
+            if cmd and cmd[0] == ';':  # The first cmd fails this check
+                cmd = cmd[1:]
+            if cmd:  # Catch empty cmds from dud-EOL-semicolons
+                cmds.append(cmd.strip())
+        return cmds
+
+    def _find_breakpoints(self, line):
+        breakpoints = []
+        in_quote = False
+        for i, ch in enumerate(line):
+            if ch in ["\"", "'"]:
+                in_quote = not in_quote
+            if ch == ';' and not in_quote:
+                breakpoints.append(i)
+            if ch == '#' and not in_quote:
+                break  # This is comment territory, ignore everything.
+        return breakpoints
