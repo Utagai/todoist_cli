@@ -137,6 +137,9 @@ class TodoistCLI(Cmd):
         elif sub_cmd == 'delete':
             wrapper.todoist.delete_project(args[1])
 
+    @command
+    @arglen(0)
+    @emptystate
     def do_exit(self, args):
         """
         Exits the CLI application.
