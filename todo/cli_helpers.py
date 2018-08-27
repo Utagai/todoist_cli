@@ -81,6 +81,8 @@ def _get_pat_and_hint(arg):
     elif '%c:' in arg:
         pat = inject_base_pat.format('c', '')
         hint = hint_base.format('c')
+    else:
+        pat, hint = None, None
 
     return pat, hint
 
