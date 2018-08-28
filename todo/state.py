@@ -42,5 +42,7 @@ class CLIState:
                 pass
         if hint == '%c' or not hint and self.active_project:
             return self.active_project
+        if hint == '%cp' or not hint and self.active_project:
+            return self.active_project.tasks[int(identifier)]
 
         raise CmdError("The parameter '{}' does not exist".format(identifier))
