@@ -13,7 +13,10 @@ class CmdError(Exception):
 def command(func):
     @wraps(func)
     def cmd_trycatch(self, arg):
-        args = shlex.split(arg, comments=True)
+        cmds = _decompose(arg)
+        if len(cmds) > 1:
+            self.cmdqueue.extend(cmds[1:])
+        args = shlex.split(cmds[0] if cmds else arg, comments=True)
         try:
             func(self, args)
         except CmdError as e:
@@ -22,6 +25,33 @@ def command(func):
             prnt("\tCommand:\n\t\t->\"{}\"".format(pure_cmd_name(func)), RED)
             prnt("\tArgument string:\n\t\t->\"{}\"".format(arg), RED)
     return cmd_trycatch
+
+
+def _decompose(line):
+    breakpoints = _find_breakpoints(line)
+    inclusive_breakpoints = [0] + breakpoints + [len(line)]
+    cmds = []
+    for i in range(len(breakpoints) + 1):
+        start = inclusive_breakpoints[i]
+        end = inclusive_breakpoints[i+1]
+        cmd = line[start:end]
+        if cmd and cmd[0] == ';':  # The first cmd fails this check
+            cmd = cmd[1:]
+        cmds.append(cmd.strip())
+    return cmds
+
+
+def _find_breakpoints(line):
+    breakpoints = []
+    in_quote = False
+    for i, ch in enumerate(line):
+        if ch in ["\"", "'"]:
+            in_quote = not in_quote
+        if ch == ';' and not in_quote:
+            breakpoints.append(i)
+        if ch == '#' and not in_quote:
+            break  # This is comment territory, ignore everything.
+    return breakpoints
 
 
 def state(func):
