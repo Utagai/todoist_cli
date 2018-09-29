@@ -108,7 +108,7 @@ class TodoistCLI(Cmd):
                     PURPLE, TURQ, PURPLE, TURQ, BLUE, ORANGE
                     )
         except (ValueError, CmdError):
-            raise CmdError("Argument must be a project id.")
+            raise CmdError("Argument must be a valid project")
 
     @command
     @arglen(2)
@@ -137,6 +137,9 @@ class TodoistCLI(Cmd):
         elif sub_cmd == 'delete':
             wrapper.todoist.delete_project(args[1])
 
+    @command
+    @arglen(0)
+    @emptystate
     def do_exit(self, args):
         """
         Exits the CLI application.

@@ -13,7 +13,10 @@ class CmdError(Exception):
 def command(func):
     @wraps(func)
     def cmd_trycatch(self, arg):
-        args = shlex.split(arg, comments=True)
+        cmds = _decompose(arg)
+        if len(cmds) > 1:
+            self.cmdqueue.extend(cmds[1:])
+        args = shlex.split(cmds[0] if cmds else arg, comments=True)
         try:
             func(self, args)
         except CmdError as e:
@@ -22,6 +25,33 @@ def command(func):
             prnt("\tCommand:\n\t\t->\"{}\"".format(pure_cmd_name(func)), RED)
             prnt("\tArgument string:\n\t\t->\"{}\"".format(arg), RED)
     return cmd_trycatch
+
+
+def _decompose(line):
+    breakpoints = _find_breakpoints(line)
+    inclusive_breakpoints = [0] + breakpoints + [len(line)]
+    cmds = []
+    for i in range(len(breakpoints) + 1):
+        start = inclusive_breakpoints[i]
+        end = inclusive_breakpoints[i+1]
+        cmd = line[start:end]
+        if cmd and cmd[0] == ';':  # The first cmd fails this check
+            cmd = cmd[1:]
+        cmds.append(cmd.strip())
+    return cmds
+
+
+def _find_breakpoints(line):
+    breakpoints = []
+    in_quote = False
+    for i, ch in enumerate(line):
+        if ch in ["\"", "'"]:
+            in_quote = not in_quote
+        if ch == ';' and not in_quote:
+            breakpoints.append(i)
+        if ch == '#' and not in_quote:
+            break  # This is comment territory, ignore everything.
+    return breakpoints
 
 
 def state(func):
@@ -65,38 +95,52 @@ class arglen:
         return arglen_check
 
 
-def inject(func):
+def _get_pat_and_hint(arg):
     inject_base_pat = '%{}:["]?({})["]?'
     hint_base = '%{}'
 
+    if '%p:' in arg:
+        pat = inject_base_pat.format('p', '\d+')
+        hint = hint_base.format('p')
+    elif '%s:' in arg:
+        pat = inject_base_pat.format('s', '.+')
+        hint = hint_base.format('s')
+    elif '%:' in arg:
+        pat = inject_base_pat.format('', '.+')
+        hint = hint_base.format('')
+    elif '%c:' in arg:
+        pat = inject_base_pat.format('c', '')
+        hint = hint_base.format('c')
+    elif '%cp:' in arg:
+        pat = inject_base_pat.format('cp', '\d+')
+        hint = hint_base.format('cp')
+    else:
+        pat, hint = None, None
+
+    return pat, hint
+
+
+def _inject_id(self, args, i, pat, hint):
+    res = re.compile(pat).search(args[i])
+    if not res:
+        raise CmdError("Invalid substitution argument")
+    val = res.group(1)
+    inject_id = str(self.state.fetch(val, hint=hint).obj_id)
+    args[i] = re.sub(pat, inject_id, args[i])
+
+
+def inject(func):
     @wraps(func)
     def inject_arg(self, args):
         for i in range(len(args)):
             arg = args[i]
-            if '%p:' in arg:
-                pat = inject_base_pat.format('p', '\d+')
-                hint = hint_base.format('p')
-            elif '%s:' in arg:
-                pat = inject_base_pat.format('s', '.+')
-                hint = hint_base.format('s')
-            elif '%:' in arg:
-                pat = inject_base_pat.format('', '.+')
-                hint = hint_base.format('')
-            elif '%c:' in arg:
-                pat = inject_base_pat.format('c', '')
-                hint = hint_base.format('c')
-            else:
+            pat, hint = _get_pat_and_hint(arg)
+            if not pat and not hint:
                 continue
 
-            res = re.compile(pat).search(arg)
-            if not res:
-                raise CmdError("Invalid substitution argument")
-            val = res.group(1)
-            inject_id = str(self.state.fetch(val, hint=hint).obj_id)
-            args[i] = re.sub(pat, inject_id, arg)
+            _inject_id(self, args, i, pat, hint)
 
         func(self, args)
-        # readline_inject(args)
 
     return inject_arg
 
