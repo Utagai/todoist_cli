@@ -14,6 +14,7 @@ def command(func):
     @wraps(func)
     def cmd_trycatch(self, arg):
         cmds = _decompose(arg)
+        _inject(self, cmds)
         if len(cmds) > 1:
             self.cmdqueue.extend(cmds[1:])
         args = shlex.split(cmds[0] if cmds else arg, comments=True)
@@ -129,16 +130,19 @@ def _inject_id(self, args, i, pat, hint):
     args[i] = re.sub(pat, inject_id, args[i])
 
 
+def _inject(self, args):
+    for i in range(len(args)):
+        arg = args[i]
+        pat, hint = _get_pat_and_hint(arg)
+        if not pat and not hint:
+            continue
+
+        _inject_id(self, args, i, pat, hint)
+
 def inject(func):
     @wraps(func)
     def inject_arg(self, args):
-        for i in range(len(args)):
-            arg = args[i]
-            pat, hint = _get_pat_and_hint(arg)
-            if not pat and not hint:
-                continue
-
-            _inject_id(self, args, i, pat, hint)
+        _inject(self, args)
 
         func(self, args)
 
