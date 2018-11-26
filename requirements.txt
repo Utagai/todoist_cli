@@ -1,20 +1,7 @@
-alabaster==0.7.10
-Babel==2.5.1
-certifi==2017.11.5
+certifi==2018.10.15
 chardet==3.0.4
-colored==1.3.5
-docutils==0.14
-idna==2.6
-imagesize==0.7.1
-Jinja2==2.10
-MarkupSafe==1.0
-Pygments==2.2.0
-pytz==2017.3
-requests==2.18.4
-six==1.11.0
-snowballstemmer==1.2.1
-Sphinx==1.6.5
-sphinx-rtd-theme==0.2.4
-sphinxcontrib-websupport==1.0.1
--e git+git@github.com:Doist/todoist-python.git@4aa3b954af68386d9d65355f5f43c0cd7dafc7e1#egg=todoist_python
-urllib3==1.22
+colored==1.3.93
+idna==2.7
+requests==2.20.1
+-e git+git@github.com:Doist/todoist-python.git@f272e44f527506b3d974bf6a661a544ad9d95505#egg=todoist_python
+urllib3==1.24.1

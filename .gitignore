@@ -2,3 +2,4 @@ todoist_api/
 *.pyc
 *.swp
 todoist-python/
+venv/
