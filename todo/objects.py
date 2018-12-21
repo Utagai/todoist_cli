@@ -1,13 +1,13 @@
 from cli_helpers import CmdError
-import wrapper
 
 from color import prnt_str, BROWN, TURQ, GREEN
 
 
 class _TodoistObject:
-    def __init__(self, obj_id=None):
+    def __init__(self, wrapper, obj_id=None):
         self.obj_id = obj_id
         self._raw = None
+        self._wrapper = wrapper
         if obj_id:
             self._populate()
 
@@ -27,13 +27,13 @@ class _TodoistObject:
 
 class Task(_TodoistObject):
     def _populate(self):
-        self._raw = wrapper.todoist.task_data(self.obj_id)
+        self._raw = self._wrapper.task_data(self.obj_id)
         self.name = self._raw['item']['content']
         self.date = self._raw['item']['date_added']
         self.project_id = self._raw['project']['id']
 
-    def _from_raw(raw):
-        task = Task()
+    def _from_raw(wrapper, raw):
+        task = Task(wrapper)
         task._raw = raw
         task.obj_id = raw['id']
         task.name = raw['content']
@@ -44,14 +44,14 @@ class Task(_TodoistObject):
     @property
     def project(self):
         if self.project is None:
-            self.project = wrapper.todoist.project_data(self.project_id)
+            self.project = self._wrapper.project_data(self.project_id)
 
         return self.project
 
 
 class Project(_TodoistObject):
     def _populate(self):
-        self._raw = wrapper.todoist.project_data(self.obj_id)
+        self._raw = self._wrapper.project_data(self.obj_id)
         if 'error' in self._raw:
             raise CmdError(str(self._raw['error']))
         self.name = self._raw['project']['name']
@@ -60,7 +60,11 @@ class Project(_TodoistObject):
     @property
     def tasks(self):
         if self._tasks is None:
-            self._tasks = [Task._from_raw(raw) for raw in self._raw['items']]
+            self._tasks = [
+                    Task._from_raw(self._wrapper, raw)
+                    for raw
+                    in self._raw['items']
+            ]
 
         return self._tasks
 

@@ -3,10 +3,11 @@ from cli_helpers import CmdError
 
 
 class CLIState:
-    def __init__(self):
+    def __init__(self, wrapper):
         self.listing = []
         self.listing_map = {}
         self.active_project = None
+        self._wrapper = wrapper
 
     def set_state(self, listing):
         self.listing = listing
@@ -17,7 +18,7 @@ class CLIState:
         self.listing_map = {}
 
     def set_project(self, project_id):
-        self.active_project = Project(project_id)
+        self.active_project = Project(self._wrapper, project_id)
 
     def _gen_listing_map(self, listing):
         for item in listing:

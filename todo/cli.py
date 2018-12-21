@@ -13,8 +13,24 @@ class TodoistCLI(Cmd):
 
     def __init__(self, conf):
         super().__init__()
-        self.state = CLIState()
         self.conf = conf
+        self._wrapper = wrapper.TodoistWrapper(self.conf)
+        self.state = CLIState(self._wrapper)
+        self.prompt = prnt_str('~', '>', ' ', PURPLE, BLUE, ORANGE)
+        self.emptyline = lambda *args: None
+        self.cmdqueue.append('projects')
+        default_proj = conf["default_project"]
+        if default_proj:
+            project_selection_cmd = 'select %s:"{}"'.format(default_proj)
+            config_comment = " # Auto-injected from config " + "file (default_project)."
+            self.cmdqueue.append(project_selection_cmd + config_comment)
+
+    def do(self):
+        """
+        This function begins the cmdloop for TodoistCLI, and will not return
+        until the application exits.
+        """
+        self.cmdloop(prnt_str('todoist', PURPLE))
 
     @command
     @arglen(0)
@@ -25,7 +41,7 @@ class TodoistCLI(Cmd):
 
         Takes no arguments.
         """
-        projects = wrapper.todoist.get_projects()
+        projects = self._wrapper.get_projects()
         cli.print_listing(projects, 0)
         return projects
 
@@ -50,12 +66,12 @@ class TodoistCLI(Cmd):
 
         pos = 0
         if project_id:
-            project = Project(project_id)
+            project = Project(self._wrapper, project_id)
             prnt('<', project, '>', VIOLET, None, VIOLET)
             pos = cli.print_listing(project, pos)
             return project.tasks
         else:
-            projects = wrapper.todoist.get_projects()
+            projects = self._wrapper.get_projects()
             tasks = []
             for project in projects:
                 prnt('<', project, '>', VIOLET, None, VIOLET)
@@ -82,9 +98,9 @@ class TodoistCLI(Cmd):
             if self.state.active_project is None:
                 raise CmdError("No active project. Use the select command")
             proj_id = self.state.active_project.obj_id
-            wrapper.todoist.create_task(args[1], proj_id)
+            self._wrapper.create_task(args[1], proj_id)
         elif sub_cmd == 'complete':
-            wrapper.todoist.complete_task(args[1])
+            self._wrapper.complete_task(args[1])
 
         self.do_tasks(str(self.state.active_project.obj_id))
 
@@ -129,13 +145,13 @@ class TodoistCLI(Cmd):
         """
         sub_cmd = args[0]
         if sub_cmd == 'create':
-            wrapper.todoist.create_project(args[1])
+            self._wrapper.create_project(args[1])
         elif sub_cmd == 'complete':
-            wrapper.todoist.complete_project(args[1])
+            self._wrapper.complete_project(args[1])
         elif sub_cmd == 'clear':
-            wrapper.todoist.clear_project(args[1])
+            self._wrapper.clear_project(args[1])
         elif sub_cmd == 'delete':
-            wrapper.todoist.delete_project(args[1])
+            self._wrapper.delete_project(args[1])
 
     @command
     @arglen(0)

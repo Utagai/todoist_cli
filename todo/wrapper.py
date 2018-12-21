@@ -2,13 +2,6 @@ from todoist import TodoistAPI
 from objects import Project
 from cli_helpers import CmdError
 
-todoist = None
-
-
-def init(conf):
-    global todoist
-    todoist = TodoistWrapper(conf)
-
 
 class TodoistWrapper:
     def __init__(self, conf):
@@ -17,7 +10,7 @@ class TodoistWrapper:
         self.todoist.sync()
 
     def get_projects(self):
-        projs = [Project(proj['id']) for proj in self.todoist['projects']]
+        projs = [Project(self, p['id']) for p in self.todoist['projects']]
         if not self.conf['show_inbox']:
             return [proj for proj in projs if proj.name != 'Inbox']
         else:
@@ -46,7 +39,7 @@ class TodoistWrapper:
 
     def _get_project_task_ids(self, project_id):
         try:
-            project = Project(int(project_id))
+            project = Project(self, int(project_id))
             task_ids = [task.obj_id for task in project]
             return task_ids
         except ValueError:
