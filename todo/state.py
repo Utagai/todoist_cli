@@ -12,6 +12,7 @@ class CLIState:
     def set_state(self, listing):
         self.listing = listing
         self._gen_listing_map(listing)
+        return listing
 
     def clear_state(self):
         self.listing = []

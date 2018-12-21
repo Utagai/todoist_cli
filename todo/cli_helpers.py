@@ -18,7 +18,7 @@ def command(func):
             self.cmdqueue.extend(cmds[1:])
         args = shlex.split(cmds[0] if cmds else arg, comments=True)
         try:
-            func(self, args)
+            return func(self, args)
         except CmdError as e:
             prnt("Error: {}.".format(str(e)), RED)
             prnt("Command details:", RED)
@@ -57,7 +57,7 @@ def _find_breakpoints(line):
 def state(func):
     @wraps(func)
     def set_state(self, args):
-        self.state.set_state(func(self, args))
+        return self.state.set_state(func(self, args))
 
     return set_state
 
