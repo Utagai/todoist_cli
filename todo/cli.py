@@ -162,3 +162,24 @@ class TodoistCLI(Cmd):
         """
         prnt("Bye", VIOLET)
         exit(0)
+
+    def onecmd(self, line):
+        """
+        An override of Cmd's onecmd(), so that we do not follow the currently
+        default behavior of the Cmd module, which I think is dumb, and is that
+        whenever a non-falsey value is returned from a do_cmd() function, we
+        should stop. Instead, this makes it so that we only stop if we get back
+        an error from running a command.
+        """
+        try:
+            super().onecmd(line)
+            return False
+        except CmdError as err:
+            # This code path should actually never happen since do_cmd()
+            # methods should be wrapped with the @command decorator, so we
+            # throw in this case to make it clear that our code is somehow,
+            # somewhere wrong.
+            assert err is not None, "CmdError's should _always_ be caught"
+            raise
+        except Exception as err:
+            return err
