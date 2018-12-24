@@ -22,7 +22,8 @@ class TodoistCLI(Cmd):
         default_proj = conf["default_project"]
         if default_proj:
             project_selection_cmd = 'select %s:"{}"'.format(default_proj)
-            config_comment = " # Auto-injected from config " + "file (default_project)."
+            config_comment = " # Auto-injected from config " \
+                + "file (default_project)."
             self.cmdqueue.append(project_selection_cmd + config_comment)
 
     def do(self):
