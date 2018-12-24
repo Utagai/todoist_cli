@@ -3,3 +3,4 @@ todoist_api/
 *.swp
 todoist-python/
 venv/
+src/
