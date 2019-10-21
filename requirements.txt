@@ -4,4 +4,4 @@ colored==1.3.93
 idna==2.7
 requests==2.20.1
 -e git+git@github.com:Doist/todoist-python.git@f272e44f527506b3d974bf6a661a544ad9d95505#egg=todoist_python
-urllib3==1.24.1
+urllib3==1.24.2
